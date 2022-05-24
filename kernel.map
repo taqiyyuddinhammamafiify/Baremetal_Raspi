@@ -1,0 +1,77 @@
+
+Memory Configuration
+
+Name             Origin             Length             Attributes
+RAM              0x00008000         0x00100000         xrw
+*default*        0x00000000         0xffffffff
+
+Linker script and memory map
+
+LOAD build/counter.o
+LOAD build/led.o
+LOAD build/mailbox.o
+LOAD build/main.o
+LOAD ./libcsud.a
+
+.init           0x00008000        0x8
+ *(.init)
+ .init          0x00008000        0x8 build/main.o
+                0x00008000                _start
+
+.text           0x00008008      0x1b8
+ *(.text)
+ .text          0x00008008       0x20 build/counter.o
+                0x00008008                delay
+ .text          0x00008028       0x3c build/led.o
+                0x00008028                set_led_state
+ .text          0x00008064       0x4c build/mailbox.o
+                0x00008064                mailbox_write
+                0x0000807c                mailbox_read
+ .text          0x000080b0      0x110 build/main.o
+
+.glue_7         0x000081c0        0x0
+ .glue_7        0x000081c0        0x0 linker stubs
+
+.glue_7t        0x000081c0        0x0
+ .glue_7t       0x000081c0        0x0 linker stubs
+
+.vfp11_veneer   0x000081c0        0x0
+ .vfp11_veneer  0x000081c0        0x0 linker stubs
+
+.v4_bx          0x000081c0        0x0
+ .v4_bx         0x000081c0        0x0 linker stubs
+
+.iplt           0x000081c0        0x0
+ .iplt          0x000081c0        0x0 build/led.o
+
+.rel.dyn        0x000081c0        0x0
+ .rel.iplt      0x000081c0        0x0 build/led.o
+
+.data           0x000081c0       0x24
+ *(.data)
+ .data          0x000081c0        0x0 build/counter.o
+ .data          0x000081c0       0x24 build/led.o
+ .data          0x000081e4        0x0 build/mailbox.o
+ .data          0x000081e4        0x0 build/main.o
+OUTPUT(build/output.elf elf32-littlearm)
+LOAD linker stubs
+
+.igot.plt       0x000081e4        0x0
+ .igot.plt      0x000081e4        0x0 build/led.o
+
+.bss            0x000081e4        0x0
+ .bss           0x000081e4        0x0 build/counter.o
+ .bss           0x000081e4        0x0 build/led.o
+ .bss           0x000081e4        0x0 build/mailbox.o
+ .bss           0x000081e4        0x0 build/main.o
+
+.ARM.attributes
+                0x00000000       0x12
+ .ARM.attributes
+                0x00000000       0x12 build/counter.o
+ .ARM.attributes
+                0x00000012       0x12 build/led.o
+ .ARM.attributes
+                0x00000024       0x12 build/mailbox.o
+ .ARM.attributes
+                0x00000036       0x12 build/main.o

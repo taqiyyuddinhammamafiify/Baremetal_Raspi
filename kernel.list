@@ -1,0 +1,147 @@
+
+build/output.elf:     file format elf32-littlearm
+
+
+Disassembly of section .init:
+
+00008000 <_start>:
+    8000:	e3a0d902 	mov	sp, #32768	; 0x8000
+    8004:	ea000029 	b	80b0 <_main>
+
+Disassembly of section .text:
+
+00008008 <delay>:
+    8008:	e3a0143f 	mov	r1, #1056964608	; 0x3f000000
+    800c:	e3811a03 	orr	r1, r1, #12288	; 0x3000
+    8010:	e5912004 	ldr	r2, [r1, #4]
+
+00008014 <delay1$>:
+    8014:	e5913004 	ldr	r3, [r1, #4]
+    8018:	e0433002 	sub	r3, r3, r2
+    801c:	e1530000 	cmp	r3, r0
+    8020:	bafffffb 	blt	8014 <delay1$>
+    8024:	e1a0f00e 	mov	pc, lr
+
+00008028 <set_led_state>:
+    8028:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+    802c:	e1a01000 	mov	r1, r0
+    8030:	e59f0028 	ldr	r0, [pc, #40]	; 8060 <set_led_state+0x38>
+    8034:	e3a02000 	mov	r2, #0
+    8038:	e5802004 	str	r2, [r0, #4]
+    803c:	e5802010 	str	r2, [r0, #16]
+    8040:	e3a02082 	mov	r2, #130	; 0x82
+    8044:	e5802014 	str	r2, [r0, #20]
+    8048:	e5801018 	str	r1, [r0, #24]
+    804c:	e2800008 	add	r0, r0, #8
+    8050:	eb000003 	bl	8064 <mailbox_write>
+    8054:	e3a00008 	mov	r0, #8
+    8058:	eb000007 	bl	807c <mailbox_read>
+    805c:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+    8060:	000081c0 	.word	0x000081c0
+
+00008064 <mailbox_write>:
+    8064:	e59f1040 	ldr	r1, [pc, #64]	; 80ac <right_mail$+0x24>
+
+00008068 <wait$>:
+    8068:	e5912038 	ldr	r2, [r1, #56]	; 0x38
+    806c:	e3120102 	tst	r2, #-2147483648	; 0x80000000
+    8070:	1afffffc 	bne	8068 <wait$>
+    8074:	e5810020 	str	r0, [r1, #32]
+    8078:	e1a0f00e 	mov	pc, lr
+
+0000807c <mailbox_read>:
+    807c:	e52de004 	push	{lr}		; (str lr, [sp, #-4]!)
+    8080:	e1a01000 	mov	r1, r0
+    8084:	e59f0020 	ldr	r0, [pc, #32]	; 80ac <right_mail$+0x24>
+
+00008088 <right_mail$>:
+    8088:	e5902018 	ldr	r2, [r0, #24]
+    808c:	e3120101 	tst	r2, #1073741824	; 0x40000000
+    8090:	1afffffc 	bne	8088 <right_mail$>
+    8094:	e5902000 	ldr	r2, [r0]
+    8098:	e202300f 	and	r3, r2, #15
+    809c:	e1330001 	teq	r3, r1
+    80a0:	1afffff8 	bne	8088 <right_mail$>
+    80a4:	e3c2000f 	bic	r0, r2, #15
+    80a8:	e49df004 	pop	{pc}		; (ldr pc, [sp], #4)
+    80ac:	3f00b880 	.word	0x3f00b880
+
+000080b0 <_main>:
+    80b0:	e3a04004 	mov	r4, #4
+
+000080b4 <pertama$>:
+    80b4:	e3a00001 	mov	r0, #1
+    80b8:	ebffffda 	bl	8028 <set_led_state>
+    80bc:	e59f00f4 	ldr	r0, [pc, #244]	; 81b8 <kelima$+0x34>
+    80c0:	ebffffd0 	bl	8008 <delay>
+    80c4:	e3a00000 	mov	r0, #0
+    80c8:	ebffffd6 	bl	8028 <set_led_state>
+    80cc:	e59f00e4 	ldr	r0, [pc, #228]	; 81b8 <kelima$+0x34>
+    80d0:	ebffffcc 	bl	8008 <delay>
+    80d4:	e2544001 	subs	r4, r4, #1
+    80d8:	1afffff5 	bne	80b4 <pertama$>
+    80dc:	e59f00d8 	ldr	r0, [pc, #216]	; 81bc <kelima$+0x38>
+    80e0:	ebffffc8 	bl	8008 <delay>
+    80e4:	e3a04007 	mov	r4, #7
+
+000080e8 <kedua$>:
+    80e8:	e3a00001 	mov	r0, #1
+    80ec:	ebffffcd 	bl	8028 <set_led_state>
+    80f0:	e59f00c0 	ldr	r0, [pc, #192]	; 81b8 <kelima$+0x34>
+    80f4:	ebffffc3 	bl	8008 <delay>
+    80f8:	e3a00000 	mov	r0, #0
+    80fc:	ebffffc9 	bl	8028 <set_led_state>
+    8100:	e59f00b0 	ldr	r0, [pc, #176]	; 81b8 <kelima$+0x34>
+    8104:	ebffffbf 	bl	8008 <delay>
+    8108:	e2544001 	subs	r4, r4, #1
+    810c:	1afffff5 	bne	80e8 <kedua$>
+    8110:	e59f00a4 	ldr	r0, [pc, #164]	; 81bc <kelima$+0x38>
+    8114:	ebffffbb 	bl	8008 <delay>
+    8118:	e3a04006 	mov	r4, #6
+
+0000811c <ketiga$>:
+    811c:	e3a00001 	mov	r0, #1
+    8120:	ebffffc0 	bl	8028 <set_led_state>
+    8124:	e59f008c 	ldr	r0, [pc, #140]	; 81b8 <kelima$+0x34>
+    8128:	ebffffb6 	bl	8008 <delay>
+    812c:	e3a00000 	mov	r0, #0
+    8130:	ebffffbc 	bl	8028 <set_led_state>
+    8134:	e59f007c 	ldr	r0, [pc, #124]	; 81b8 <kelima$+0x34>
+    8138:	ebffffb2 	bl	8008 <delay>
+    813c:	e2544001 	subs	r4, r4, #1
+    8140:	1afffff5 	bne	811c <ketiga$>
+    8144:	e59f0070 	ldr	r0, [pc, #112]	; 81bc <kelima$+0x38>
+    8148:	ebffffae 	bl	8008 <delay>
+    814c:	e3a04007 	mov	r4, #7
+
+00008150 <keempat$>:
+    8150:	e3a00001 	mov	r0, #1
+    8154:	ebffffb3 	bl	8028 <set_led_state>
+    8158:	e59f0058 	ldr	r0, [pc, #88]	; 81b8 <kelima$+0x34>
+    815c:	ebffffa9 	bl	8008 <delay>
+    8160:	e3a00000 	mov	r0, #0
+    8164:	ebffffaf 	bl	8028 <set_led_state>
+    8168:	e59f0048 	ldr	r0, [pc, #72]	; 81b8 <kelima$+0x34>
+    816c:	ebffffa5 	bl	8008 <delay>
+    8170:	e2544001 	subs	r4, r4, #1
+    8174:	1afffff5 	bne	8150 <keempat$>
+    8178:	e59f003c 	ldr	r0, [pc, #60]	; 81bc <kelima$+0x38>
+    817c:	ebffffa1 	bl	8008 <delay>
+    8180:	e3a04002 	mov	r4, #2
+
+00008184 <kelima$>:
+    8184:	e3a00001 	mov	r0, #1
+    8188:	ebffffa6 	bl	8028 <set_led_state>
+    818c:	e59f0024 	ldr	r0, [pc, #36]	; 81b8 <kelima$+0x34>
+    8190:	ebffff9c 	bl	8008 <delay>
+    8194:	e3a00000 	mov	r0, #0
+    8198:	ebffffa2 	bl	8028 <set_led_state>
+    819c:	e59f0014 	ldr	r0, [pc, #20]	; 81b8 <kelima$+0x34>
+    81a0:	ebffff98 	bl	8008 <delay>
+    81a4:	e2544001 	subs	r4, r4, #1
+    81a8:	1afffff5 	bne	8184 <kelima$>
+    81ac:	e59f0008 	ldr	r0, [pc, #8]	; 81bc <kelima$+0x38>
+    81b0:	ebffff94 	bl	8008 <delay>
+    81b4:	eaffffbd 	b	80b0 <_main>
+    81b8:	00030d40 	.word	0x00030d40
+    81bc:	001e8480 	.word	0x001e8480
